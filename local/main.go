@@ -7,11 +7,11 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
+	ctx := context.Background() // root context
 	ctx0, cancel := context.WithCancel(ctx) //parent context ctx0
-	ctx1, cancel1 := context.WithTimeout(ctx0, 2 * time.Second)
-	ctx2, cancel2 := context.WithTimeout(ctx0, 1 * time.Second)
-	ctx3, cancel3 := context.WithTimeout(ctx, 3 * time.Second)
+	ctx1, cancel1 := context.WithTimeout(ctx0, 2 * time.Second) // child context ctx1
+	ctx2, cancel2 := context.WithTimeout(ctx0, 1 * time.Second) // child context ctx2
+	ctx3, cancel3 := context.WithTimeout(ctx, 3 * time.Second)  //
 	defer cancel1()
 	defer cancel2()
 	defer cancel3()
@@ -22,6 +22,7 @@ func main() {
 	time.Sleep(5 * time.Second)
 }
 
+// service without a loop inside
 func buyTomato(ctx context.Context) {
 	select {
 	case <-ctx.Done():
@@ -44,6 +45,7 @@ func buyMeat(ctx context.Context) {
 	}
 }
 
+// service with a loop inside
 func buyVeg(ctx context.Context) {
 	Loop:
 	for i := 0; ; i++ {
